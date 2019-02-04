@@ -16,7 +16,7 @@ def load_data():
     # Split dataset
     week_x = week_dataset.iloc[:, 1:13]
     week_y = week_dataset.iloc[:, 0]
-    month_x = month_dataset.iloc[:, 1:13]
+    month_x = month_dataset.iloc[:, 2:13]
     month_y = month_dataset.iloc[:, 0]
     validation_size = 0.20
     seed = 7
