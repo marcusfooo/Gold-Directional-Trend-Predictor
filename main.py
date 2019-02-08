@@ -106,7 +106,7 @@ def predict():
             prediction = 'FALL'
             prediction_array.append(prediction)
 
-    print('GOLD is expected to %s in a week, and also %s at the end of this month!' % (
+    print('GOLD is expected to %s in a week, and also %s in a month!' % (
     prediction_array[0], prediction_array[1]))
 
 
