@@ -1,6 +1,9 @@
 import pandas as pd
+
 from sklearn import model_selection
-from sklearn.neighbors import KNeighborsClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
+
 from oandadata import SMA
 from oandadata import EMA
 from oandadata import today
@@ -14,9 +17,9 @@ def load_data():
     month_dataset.fillna(month_dataset.median(), inplace=True)
 
     # Split dataset
-    week_x = week_dataset.iloc[:, 1:13]
+    week_x = week_dataset.iloc[:, 1:12]
     week_y = week_dataset.iloc[:, 0]
-    month_x = month_dataset.iloc[:, 2:13]
+    month_x = month_dataset.iloc[:, 1:12]
     month_y = month_dataset.iloc[:, 0]
     validation_size = 0.20
     seed = 7
@@ -32,7 +35,6 @@ def load_x():
 
     new_x = {
 
-        'OPEN': [today()[0]],
         'CLOSE': [today()[1]],
         'MA20': [SMA(20)],
         '20CLOSE': [],
@@ -83,13 +85,13 @@ def predict():
     x_weektrain, y_weektrain, x_monthtrain, y_monthtrain = load_data()
 
     # Prediction on new dataset
-    week_knn = KNeighborsClassifier()
-    week_knn.fit(x_weektrain, y_weektrain)
-    month_knn = KNeighborsClassifier()
-    month_knn.fit(x_monthtrain, y_monthtrain)
+    week_lr = LogisticRegression()
+    week_lr.fit(x_weektrain, y_weektrain)
+    month_cart = DecisionTreeClassifier()
+    month_cart.fit(x_monthtrain, y_monthtrain)
     data_x = pd.DataFrame(data=new_x)
-    week_prediction = week_knn.predict(data_x)
-    month_prediction = month_knn.predict(data_x)
+    week_prediction = week_lr.predict(data_x)
+    month_prediction = month_cart.predict(data_x)
 
     prediction_array = []
     for prediction in week_prediction, month_prediction:
