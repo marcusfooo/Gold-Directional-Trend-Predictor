@@ -8,6 +8,10 @@ from oandadata import SMA
 from oandadata import EMA
 from oandadata import today
 
+import warnings
+
+warnings.filterwarnings('ignore')
+
 
 # Load dataset
 def load_data():
