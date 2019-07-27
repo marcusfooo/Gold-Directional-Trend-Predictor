@@ -1,4 +1,5 @@
 import pandas as pd
+from sklearn.externals import joblib
 
 from sklearn import model_selection
 from sklearn.linear_model import LogisticRegression
@@ -32,6 +33,7 @@ def load_data():
     x_weektrain, x_validation, y_weektrain, y_validation = model_selection.train_test_split(week_x, week_y, test_size=validation_size, random_state=seed)
     x_monthtrain, x_validation, y_monthtrain, y_validation = model_selection.train_test_split(month_x, month_y, test_size=validation_size, random_state=seed)
     return x_weektrain, y_weektrain, x_monthtrain, y_monthtrain
+
 
 
 # Loading in value for prediction
@@ -86,13 +88,12 @@ def load_x():
 
 def predict():
     new_x = load_x()
-    x_weektrain, y_weektrain, x_monthtrain, y_monthtrain = load_data()
 
     # Prediction on new dataset
-    week_lr = LogisticRegression()
-    week_lr.fit(x_weektrain, y_weektrain)
-    month_cart = DecisionTreeClassifier()
-    month_cart.fit(x_monthtrain, y_monthtrain)
+    filename_week = 'week_model.sav'
+    filename_month = 'month_model.sav'
+    week_lr = joblib.load(filename_week)
+    month_cart = joblib.load(filename_month)
     data_x = pd.DataFrame(data=new_x)
     week_prediction = week_lr.predict(data_x)
     month_prediction = month_cart.predict(data_x)
@@ -106,11 +107,18 @@ def predict():
             prediction = 'FALL'
             prediction_array.append(prediction)
 
-    print('GOLD is expected to %s in a week, and also %s in a month!' % (
+    # Joblib Model
+    # joblib.dump(week_lr, filename_week)
+    # joblib.dump(month_cart, filename_month)
+
+    print('GOLD current price: %s \nGOLD is expected to %s in a week, and also %s in a month!' % ( new_x['CLOSE'],
     prediction_array[0], prediction_array[1]))
 
 
 predict()
+
+
+
 
 
 
